@@ -4,21 +4,23 @@ module.exports = function check(str, bracketsConfig) {
   for (let i = 0; i < str.length; i++) {
     for (let j = 0; j < bracketsConfig.length; j++) {
       if (bracketsConfig[j][0] == bracketsConfig[j][1]) {
-        if (first) {
+        if (first && str[i] == bracketsConfig[j][0]) {
           stack.push(str[i]);
           first = false;
-        } else {
-          if (str[i] == bracketsConfig[j][1] && stack[stack.length - 1] == bracketsConfig[j][0]) {
+        } else if (!first && stack[stack.length - 1] == bracketsConfig[j][1] && str[i] == bracketsConfig[j][1]) {
+          stack.pop();
+          first = true;
+        }
+      } else if (bracketsConfig[j][0] != bracketsConfig[j][1]) {
+        if (str[i] == bracketsConfig[j][0]) {
+          stack.push(str[i]);
+        } else if (str[i] == bracketsConfig[j][1]) {
+          if (stack[stack.length - 1] == bracketsConfig[j][0]) {
             stack.pop();
-            first = true;
+          } else if (stack[stack.length - 1] != bracketsConfig[j][0]) {
+            return false;
           }
         }
-      } else if (str[i] == bracketsConfig[j][0]) {
-        stack.push(str[i]);
-      } else if (str[i] == bracketsConfig[j][1] && stack[stack.length - 1] == bracketsConfig[j][0]) {
-        stack.pop();
-      } else if (str[i] == bracketsConfig[j][1] && stack[stack.length - 1] != bracketsConfig[j][0]) {
-        return false;
       }
     }
   }
@@ -28,4 +30,5 @@ module.exports = function check(str, bracketsConfig) {
   return true;
 }
 
-//5 10 13 14
+
+//11 12 15 18 19 20
